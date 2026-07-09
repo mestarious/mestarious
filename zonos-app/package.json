@@ -1,0 +1,19 @@
+{
+  "name": "zonos-app",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Mobile-friendly PWA for text-to-speech and voice cloning using Zonos (via fal.ai)",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "@fal-ai/client": "^1.2.1",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.2",
+    "multer": "^2.0.1"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

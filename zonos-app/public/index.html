@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#4f46e5" />
+  <title>Zonos Voice</title>
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="icon" href="icons/icon-192.png" />
+  <link rel="apple-touch-icon" href="icons/icon-192.png" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app">
+    <header class="app-header">
+      <h1>Zonos Voice</h1>
+      <p class="subtitle">Text to speech, in any voice</p>
+    </header>
+
+    <main>
+      <section class="card">
+        <label class="field-label" for="text">What should it say?</label>
+        <textarea id="text" rows="4" maxlength="600" placeholder="Type the words you want spoken..."></textarea>
+        <div class="char-count"><span id="charCount">0</span>/600</div>
+      </section>
+
+      <section class="card">
+        <div class="field-label-row">
+          <span class="field-label">Reference voice</span>
+          <span id="refStatus" class="status-pill status-pill--empty">none yet</span>
+        </div>
+        <p class="hint">Record or upload a clear 5&ndash;30s clip of the voice to clone.</p>
+
+        <div class="button-row">
+          <button id="recordBtn" class="btn btn--secondary" type="button">
+            <span class="dot"></span> Record
+          </button>
+          <label class="btn btn--secondary" for="fileInput">Upload</label>
+          <input id="fileInput" type="file" accept="audio/*" hidden />
+        </div>
+
+        <audio id="refPreview" class="ref-preview" controls hidden></audio>
+      </section>
+
+      <button id="generateBtn" class="btn btn--primary btn--full" type="button" disabled>
+        Generate speech
+      </button>
+
+      <section id="resultCard" class="card" hidden>
+        <span class="field-label">Result</span>
+        <audio id="resultAudio" controls class="result-audio"></audio>
+        <a id="downloadLink" class="btn btn--secondary btn--full" download="zonos-speech.wav">Download</a>
+      </section>
+
+      <p id="errorBox" class="error-box" hidden></p>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
