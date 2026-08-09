@@ -1,0 +1,14 @@
+{
+  "name": "appspace",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "A home-screen app hub (PWA) for phones without an app store — one tap to the web versions of your favorite apps.",
+  "scripts": {
+    "start": "node server.js",
+    "icons": "node scripts/generate-icons.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
