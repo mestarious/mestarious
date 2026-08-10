@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Discipline 360 — Stop Lying to Yourself</title>
+  <meta name="description" content="Discipline 360 is a brutal-honesty accountability app. Beat a snooze-proof alarm mission, hit your steps, write your journal — win the day, or your Loser Self wins. Free on Google Play." />
+  <meta name="theme-color" content="#E24B4A" />
+  <meta name="color-scheme" content="dark" />
+
+  <!-- Icons -->
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+  <link rel="apple-touch-icon" href="assets/icon-512.png" />
+
+  <!-- Open Graph / Twitter -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Discipline 360 — Stop Lying to Yourself" />
+  <meta property="og:description" content="Snooze-proof mission alarms. Real steps. A journal that keeps score. Win the day or your Loser Self does. Free on Google Play." />
+  <meta property="og:image" content="assets/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Discipline 360 — Stop Lying to Yourself" />
+  <meta name="twitter:description" content="Snooze-proof mission alarms. Real steps. A journal that keeps score. Free on Google Play." />
+  <meta name="twitter:image" content="assets/og-image.png" />
+
+  <!-- Fonts are self-hosted (see css/styles.css @font-face) — no runtime CDN dependency. -->
+  <link rel="preload" href="assets/fonts/space-grotesk-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="assets/fonts/inter-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin />
+
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <!-- ============ NAV ============ -->
+  <header class="nav" id="nav">
+    <div class="nav__inner">
+      <a class="brand" href="#top" aria-label="Discipline 360 home">
+        <span class="brand__mark" aria-hidden="true">
+          <svg viewBox="0 0 512 512" width="28" height="28" role="img" aria-label="Discipline 360 lightning bolt">
+            <defs>
+              <linearGradient id="navRed" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="#FF1A1A"/><stop offset="1" stop-color="#D60000"/>
+              </linearGradient>
+            </defs>
+            <rect x="16" y="16" width="480" height="480" rx="120" fill="url(#navRed)"/>
+            <rect x="34" y="34" width="444" height="444" rx="104" fill="none" stroke="#FF9E00" stroke-width="6" opacity=".85"/>
+            <path d="M295 80 L170 275 L255 275 L225 432 L342 237 L257 237 Z" fill="#fff"/>
+          </svg>
+        </span>
+        <span class="brand__name">Discipline&nbsp;360</span>
+      </a>
+
+      <nav class="nav__links" aria-label="Primary">
+        <a href="#deal">The Deal</a>
+        <a href="#battle">The Battle</a>
+        <a href="#features">Features</a>
+        <a href="#how">How it works</a>
+      </nav>
+
+      <a class="btn btn--play nav__cta" data-store="play" href="#" target="_blank" rel="noopener">
+        <svg class="btn__glyph" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M3.6 2.3 13 12 3.6 21.7c-.4-.2-.6-.6-.6-1.1V3.4c0-.5.2-.9.6-1.1Zm11 8.3L5.9 2.1l9.9 5.6-1.2 2.9Zm0 2.8 1.2 2.9-9.9 5.6 8.7-8.5ZM16 12l4.4-2.5c.8.5.8 1.6 0 2L16 14l-1.4-2 1.4-2Z"/></svg>
+        <span>Google Play</span>
+      </a>
+
+      <button class="nav__toggle" id="navToggle" aria-expanded="false" aria-controls="mobileMenu" aria-label="Open menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+    <div class="nav__mobile" id="mobileMenu" hidden>
+      <a href="#deal">The Deal</a>
+      <a href="#battle">The Battle</a>
+      <a href="#features">Features</a>
+      <a href="#how">How it works</a>
+      <a class="btn btn--play" data-store="play" href="#" target="_blank" rel="noopener">Get it on Google Play</a>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- ============ HERO ============ -->
+    <section class="hero" id="top">
+      <canvas class="hero__canvas" id="heroCanvas" aria-hidden="true"></canvas>
+      <div class="hero__fallback" aria-hidden="true"></div>
+      <div class="hero__vignette" aria-hidden="true"></div>
+
+      <div class="hero__content">
+        <p class="hero__eyebrow"><span class="spark">⚡</span> Identity-based daily accountability</p>
+        <h1 class="hero__title">
+          Stop lying<br/><span class="grad">to yourself.</span>
+        </h1>
+        <p class="hero__sub">Built for those who kept lying to themselves. A snooze-proof mission alarm, real steps, and an honest journal decide your day — <strong>win it, or your Loser&nbsp;Self does.</strong></p>
+
+        <div class="hero__cta">
+          <a class="btn btn--play btn--lg" data-store="play" href="#" target="_blank" rel="noopener">
+            <svg class="btn__glyph" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M3.6 2.3 13 12 3.6 21.7c-.4-.2-.6-.6-.6-1.1V3.4c0-.5.2-.9.6-1.1Zm11 8.3L5.9 2.1l9.9 5.6-1.2 2.9Zm0 2.8 1.2 2.9-9.9 5.6 8.7-8.5ZM16 12l4.4-2.5c.8.5.8 1.6 0 2L16 14l-1.4-2 1.4-2Z"/></svg>
+            <span class="btn__stack"><small>GET IT ON</small><b>Google Play</b></span>
+          </a>
+          <span class="btn btn--soon btn--lg" role="note" aria-label="Coming soon to the App Store">
+            <svg class="btn__glyph" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M16.4 12.9c0-2 1.6-3 1.7-3.1-1-1.4-2.4-1.6-2.9-1.6-1.2-.1-2.4.7-3 .7-.6 0-1.6-.7-2.6-.7-1.3 0-2.6.8-3.3 2-1.4 2.5-.4 6.1 1 8.1.7 1 1.4 2.1 2.5 2 1-.1 1.3-.6 2.5-.6s1.5.6 2.6.6c1.1 0 1.7-1 2.4-2 .8-1.1 1.1-2.2 1.1-2.3-.1 0-2.1-.8-2.1-3.2ZM14.5 6.8c.6-.7 1-1.6.9-2.6-.9 0-1.9.6-2.5 1.3-.5.6-1 1.6-.9 2.5 1 .1 1.9-.5 2.5-1.2Z"/></svg>
+            <span class="btn__stack"><small>SOON ON</small><b>App&nbsp;Store</b></span>
+          </span>
+        </div>
+
+        <p class="hero__meta">Free • Android • Offline-first • No nagging feeds</p>
+      </div>
+
+      <a class="hero__scroll" href="#deal" aria-label="Scroll to learn more">
+        <span></span>
+      </a>
+    </section>
+
+    <!-- ============ THE DEAL ============ -->
+    <section class="section deal" id="deal">
+      <div class="wrap">
+        <p class="kicker reveal">The rule is brutal on purpose</p>
+        <h2 class="h2 reveal">A day is a <span class="grad">WIN</span> only if you do all three.</h2>
+        <p class="lead reveal">Miss even one and the day is a loss. No half-credit. No excuses. The app doesn't care about your intentions — only what you actually did.</p>
+
+        <ol class="deal__grid">
+          <li class="deal__card reveal" style="--i:0">
+            <div class="deal__num">01</div>
+            <div class="deal__icon">
+              <svg viewBox="0 0 24 24" width="34" height="34" aria-hidden="true"><path fill="currentColor" d="M12 2a7 7 0 0 0-7 7v3.6l-1.7 3A1 1 0 0 0 4.2 17h15.6a1 1 0 0 0 .9-1.4l-1.7-3V9a7 7 0 0 0-7-7Zm0 20a3 3 0 0 0 2.8-2H9.2A3 3 0 0 0 12 22Z"/></svg>
+            </div>
+            <h3>Beat the alarm</h3>
+            <p>A snooze-proof mission — math, typing, shake or tap — stands between you and the off button. No cheating your way back to sleep.</p>
+          </li>
+          <li class="deal__card reveal" style="--i:1">
+            <div class="deal__num">02</div>
+            <div class="deal__icon">
+              <svg viewBox="0 0 24 24" width="34" height="34" aria-hidden="true"><path fill="currentColor" d="M13.5 5.5a2 2 0 1 0-2-2 2 2 0 0 0 2 2Zm-2.9 3.2L8 10.1l1.6 3.2 2.1-1-.9 4.4L8 22h2.2l2.6-4.6 2.2 2.1V22h2v-3.4l-3-2.9.9-3.3c1 1.2 2.5 2 4.1 2v-2c-1.4 0-2.6-.7-3.3-1.8l-1-1.6a2.2 2.2 0 0 0-2.8-.8Z"/></svg>
+            </div>
+            <h3>Hit your steps</h3>
+            <p>A native background counter tracks real movement from your phone's hardware sensor — accurate whether the app is open or not.</p>
+          </li>
+          <li class="deal__card reveal" style="--i:2">
+            <div class="deal__num">03</div>
+            <div class="deal__icon">
+              <svg viewBox="0 0 24 24" width="34" height="34" aria-hidden="true"><path fill="currentColor" d="M5 3h11l3 3v15a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Zm3 6v2h8V9H8Zm0 4v2h8v-2H8Zm0 4v2h5v-2H8Z"/></svg>
+            </div>
+            <h3>Write your journal</h3>
+            <p>One honest entry. A cozy journal with 20 handwriting fonts and animated backgrounds — the daily reckoning that closes the loop.</p>
+          </li>
+        </ol>
+
+        <p class="deal__punch reveal">Miss one? <span class="loser">Your Loser Self wins the day.</span></p>
+      </div>
+    </section>
+
+    <!-- ============ THE BATTLE ============ -->
+    <section class="section battle" id="battle">
+      <div class="wrap battle__wrap">
+        <div class="battle__copy">
+          <p class="kicker reveal">The Battle Within</p>
+          <h2 class="h2 reveal">Two versions of you. <span class="grad">One scoreboard.</span></h2>
+          <p class="lead reveal">Every finished day is logged as a win or a loss. Streaks build. The scoreboard never forgets. This is the mirror that makes you move — because tomorrow, one of them wins again.</p>
+          <ul class="battle__list reveal">
+            <li><span class="dot dot--win"></span> Winner Self — the days you kept your word</li>
+            <li><span class="dot dot--lose"></span> Loser Self — the days you didn't</li>
+            <li><span class="dot dot--fire"></span> Live streaks, 30-day history, exportable card</li>
+          </ul>
+        </div>
+
+        <div class="scoreboard reveal" role="img" aria-label="Winner Self 27 wins versus Loser Self 6 losses, current streak 9 days">
+          <div class="scoreboard__row">
+            <div class="score score--win">
+              <span class="score__label">Winner Self</span>
+              <span class="score__num" data-count="27">0</span>
+              <span class="score__unit">wins</span>
+            </div>
+            <div class="score__vs">VS</div>
+            <div class="score score--lose">
+              <span class="score__label">Loser Self</span>
+              <span class="score__num" data-count="6">0</span>
+              <span class="score__unit">losses</span>
+            </div>
+          </div>
+          <div class="scoreboard__streak">
+            <span class="flame">🔥</span>
+            <span class="score__num score__num--sm" data-count="9">0</span>
+            <span>day winning streak</span>
+          </div>
+          <div class="scoreboard__bar" aria-hidden="true"><span style="--w:82%"></span></div>
+          <p class="scoreboard__cap" aria-hidden="true">Sample cockpit — your numbers, your reckoning.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ FEATURES ============ -->
+    <section class="section features" id="features">
+      <div class="wrap">
+        <p class="kicker reveal">Everything is built to be un-cheatable</p>
+        <h2 class="h2 reveal">A full <span class="grad">discipline cockpit</span> in one app.</h2>
+
+        <div class="feat__grid">
+          <article class="feat reveal" style="--i:0">
+            <div class="feat__icon"><svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true"><path fill="currentColor" d="M12 2a7 7 0 0 0-7 7v3.6l-1.7 3A1 1 0 0 0 4.2 17h15.6a1 1 0 0 0 .9-1.4l-1.7-3V9a7 7 0 0 0-7-7Zm0 20a3 3 0 0 0 2.8-2H9.2A3 3 0 0 0 12 22Z"/></svg></div>
+            <h3>Snooze-proof missions</h3>
+            <p>Math, typing, shake and tap missions with low/mid/high difficulty. Engineered to survive aggressive OEM battery-killers so it rings on the exact second.</p>
+          </article>
+          <article class="feat reveal" style="--i:1">
+            <div class="feat__icon"><svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true"><path fill="currentColor" d="M13.5 5.5a2 2 0 1 0-2-2 2 2 0 0 0 2 2Zm-2.9 3.2L8 10.1l1.6 3.2 2.1-1-.9 4.4L8 22h2.2l2.6-4.6 2.2 2.1V22h2v-3.4l-3-2.9.9-3.3c1 1.2 2.5 2 4.1 2v-2c-1.4 0-2.6-.7-3.3-1.8l-1-1.6a2.2 2.2 0 0 0-2.8-.8Z"/></svg></div>
+            <h3>Native step counter</h3>
+            <p>Reads the hardware step sensor as a foreground service — counts in the background, survives reboots, and never double-counts.</p>
+          </article>
+          <article class="feat reveal" style="--i:2">
+            <div class="feat__icon"><svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true"><path fill="currentColor" d="M13 2 3 14h7l-1 8 11-13h-7l1-7Z"/></svg></div>
+            <h3>Deep focus timer</h3>
+            <p>Titled, recorded focus sessions build a track record of real work — not vibes. Your effort, logged.</p>
+          </article>
+          <article class="feat reveal" style="--i:3">
+            <div class="feat__icon"><svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true"><path fill="currentColor" d="M12 1 3 5v6c0 5 3.8 9.4 9 11 5.2-1.6 9-6 9-11V5l-9-4Zm0 10.9h7c-.5 3.7-3 6.8-7 8V12H5V6.3l7-3.1V12Z"/></svg></div>
+            <h3>App blocker</h3>
+            <p>A real overlay gate blocks the apps that steal your day once you hit a time limit — with device-admin uninstall protection so you can't weasel out.</p>
+          </article>
+          <article class="feat reveal" style="--i:4">
+            <div class="feat__icon"><svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true"><path fill="currentColor" d="M5 3h11l3 3v15a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Zm3 6v2h8V9H8Zm0 4v2h8v-2H8Zm0 4v2h5v-2H8Z"/></svg></div>
+            <h3>Cozy honest journal</h3>
+            <p>20 self-hosted handwriting fonts and animated backgrounds make the daily reckoning something you actually want to open.</p>
+          </article>
+          <article class="feat reveal" style="--i:5">
+            <div class="feat__icon"><svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true"><path fill="currentColor" d="m12 2 2.9 6.3L22 9l-5 4.9L18.2 21 12 17.5 5.8 21 7 13.9 2 9l7.1-.7L12 2Z"/></svg></div>
+            <h3>Redemption Challenge</h3>
+            <p>Blew the day? A timed micro-mission gauntlet gives you one shot to claw something back before midnight.</p>
+          </article>
+          <article class="feat reveal" style="--i:6">
+            <div class="feat__icon"><svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm6.9 9h-3a15.7 15.7 0 0 0-1-5A8 8 0 0 1 18.9 11ZM12 4.1c.8 1 1.6 2.9 1.8 6.9h-3.6c.2-4 1-5.9 1.8-6.9ZM4.3 13h3c.1 1.9.5 3.6 1 5A8 8 0 0 1 4.3 13Zm3-2h-3a8 8 0 0 1 4-4.9 15.7 15.7 0 0 0-1 4.9ZM12 19.9c-.8-1-1.6-2.9-1.8-6.9h3.6c-.2 4-1 5.9-1.8 6.9Zm3.7-1.9c.5-1.4.9-3.1 1-5h3a8 8 0 0 1-4 5Z"/></svg></div>
+            <h3>Bilingual · EN + AR</h3>
+            <p>Full English and Arabic with right-to-left support, so accountability speaks your language.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ HOW IT WORKS ============ -->
+    <section class="section how" id="how">
+      <div class="wrap">
+        <p class="kicker reveal">Four moves, every day</p>
+        <h2 class="h2 reveal">How you <span class="grad">win the day.</span></h2>
+        <ol class="steps">
+          <li class="step reveal" style="--i:0"><span class="step__n">1</span><h3>Set your mission</h3><p>Pick an alarm, a difficulty, and your daily step goal. Commit the night before.</p></li>
+          <li class="step reveal" style="--i:1"><span class="step__n">2</span><h3>Beat it &amp; move</h3><p>Solve the mission to wake up. Rack up real steps through the day.</p></li>
+          <li class="step reveal" style="--i:2"><span class="step__n">3</span><h3>Focus &amp; journal</h3><p>Run a focus session, block the traps, and write one honest entry.</p></li>
+          <li class="step reveal" style="--i:3"><span class="step__n">4</span><h3>Win the day</h3><p>All three done? Winner Self takes the day and the streak grows.</p></li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ============ WHY / FINAL CTA ============ -->
+    <section class="section cta" id="download">
+      <div class="cta__glow" aria-hidden="true"></div>
+      <div class="wrap cta__wrap">
+        <span class="cta__bolt" aria-hidden="true">⚡</span>
+        <h2 class="h2 reveal">Your future self is keeping score.<br/><span class="grad">Start winning days.</span></h2>
+        <p class="lead reveal">Offline-first. No endless feeds, no dopamine bait — just a system that refuses to let you lie to yourself.</p>
+        <div class="hero__cta reveal">
+          <a class="btn btn--play btn--lg" data-store="play" href="#" target="_blank" rel="noopener">
+            <svg class="btn__glyph" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M3.6 2.3 13 12 3.6 21.7c-.4-.2-.6-.6-.6-1.1V3.4c0-.5.2-.9.6-1.1Zm11 8.3L5.9 2.1l9.9 5.6-1.2 2.9Zm0 2.8 1.2 2.9-9.9 5.6 8.7-8.5ZM16 12l4.4-2.5c.8.5.8 1.6 0 2L16 14l-1.4-2 1.4-2Z"/></svg>
+            <span class="btn__stack"><small>GET IT ON</small><b>Google Play</b></span>
+          </a>
+          <span class="btn btn--soon btn--lg" role="note" aria-label="Coming soon to the App Store">
+            <svg class="btn__glyph" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M16.4 12.9c0-2 1.6-3 1.7-3.1-1-1.4-2.4-1.6-2.9-1.6-1.2-.1-2.4.7-3 .7-.6 0-1.6-.7-2.6-.7-1.3 0-2.6.8-3.3 2-1.4 2.5-.4 6.1 1 8.1.7 1 1.4 2.1 2.5 2 1-.1 1.3-.6 2.5-.6s1.5.6 2.6.6c1.1 0 1.7-1 2.4-2 .8-1.1 1.1-2.2 1.1-2.3-.1 0-2.1-.8-2.1-3.2ZM14.5 6.8c.6-.7 1-1.6.9-2.6-.9 0-1.9.6-2.5 1.3-.5.6-1 1.6-.9 2.5 1 .1 1.9-.5 2.5-1.2Z"/></svg>
+            <span class="btn__stack"><small>SOON ON</small><b>App&nbsp;Store</b></span>
+          </span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="footer">
+    <div class="wrap footer__inner">
+      <div class="footer__brand">
+        <img src="assets/icon-512.png" width="40" height="40" alt="Discipline 360 app icon" />
+        <div>
+          <strong>Discipline 360</strong>
+          <span>Stop lying to yourself.</span>
+        </div>
+      </div>
+      <div class="footer__links">
+        <a href="#features">Features</a>
+        <a href="#how">How it works</a>
+        <a href="https://play.google.com/store/apps/details?id=com.discipline360.app" target="_blank" rel="noopener">Google Play</a>
+        <a href="mailto:decipline360@gmail.com">Contact</a>
+      </div>
+      <p class="footer__legal">© <span id="year">2026</span> Discipline 360 · <a href="mailto:decipline360@gmail.com">decipline360@gmail.com</a></p>
+    </div>
+  </footer>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
