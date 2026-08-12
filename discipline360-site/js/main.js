@@ -125,7 +125,7 @@ onScroll();
 /* WebGL hero (dynamic import so a scene failure never breaks the page) */
 const canvas = document.getElementById('heroCanvas');
 if (canvas) {
-  import('./scene.js')
+  import('./scene.js?v=cine1')
     .then((m) => m.initHeroScene(canvas))
     .catch((err) => {
       console.warn('[Discipline360] Hero WebGL unavailable, using gradient fallback.', err);
