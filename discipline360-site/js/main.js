@@ -122,13 +122,62 @@ window.addEventListener('resize', requestTick, { passive: true });
 if (prefersReduced || window.innerWidth <= 960) pinSteps.forEach((s) => s.classList.add('is-active'));
 onScroll();
 
-/* WebGL hero (dynamic import so a scene failure never breaks the page) */
-const canvas = document.getElementById('heroCanvas');
-if (canvas) {
-  import('./scene.js?v=cine1')
-    .then((m) => m.initHeroScene(canvas))
-    .catch((err) => {
-      console.warn('[Discipline360] Hero WebGL unavailable, using gradient fallback.', err);
-      canvas.style.display = 'none';
+/* ---- 3D scroll-phone showcase: activate the step nearest viewport centre ---- */
+function initShowcaseDriver(showcase) {
+  const steps = [...document.querySelectorAll('#showcaseSteps .scase')];
+  if (!steps.length) return;
+  let current = -1;
+  const setActive = (idx) => {
+    if (idx === current) return;
+    current = idx;
+    steps.forEach((s, i) => s.classList.toggle('is-active', i === idx));
+    if (showcase && showcase.setStep) showcase.setStep(idx);
+  };
+  setActive(0);
+  const pick = () => {
+    const mid = window.innerHeight / 2;
+    let best = 0, bestD = Infinity;
+    steps.forEach((s, i) => {
+      const r = s.getBoundingClientRect();
+      const d = Math.abs((r.top + r.height / 2) - mid);
+      if (d < bestD) { bestD = d; best = i; }
     });
+    setActive(best);
+  };
+  let raf = false;
+  window.addEventListener('scroll', () => { if (!raf) { raf = true; requestAnimationFrame(() => { raf = false; pick(); }); } }, { passive: true });
+  window.addEventListener('resize', pick, { passive: true });
+  pick();
+}
+
+/* WebGL scenes (dynamic import so a scene failure never breaks the page) */
+const heroCanvas = document.getElementById('heroCanvas');
+const showcaseCanvas = document.getElementById('showcaseCanvas');
+if (heroCanvas || showcaseCanvas) {
+  import('./scene.js?v=r2')
+    .then((m) => {
+      if (heroCanvas) {
+        try { m.initHeroScene(heroCanvas); }
+        catch (err) { console.warn('[Discipline360] Hero WebGL unavailable.', err); heroCanvas.style.display = 'none'; }
+      }
+      if (showcaseCanvas) {
+        try {
+          const showcase = m.initShowcaseScene(showcaseCanvas);
+          if (!showcase || showcase.ok === false) showcaseCanvas.style.display = 'none';
+          initShowcaseDriver(showcase);
+        } catch (err) {
+          console.warn('[Discipline360] Showcase WebGL unavailable.', err);
+          showcaseCanvas.style.display = 'none';
+          initShowcaseDriver(null);
+        }
+      }
+    })
+    .catch((err) => {
+      console.warn('[Discipline360] WebGL scenes unavailable, using gradient fallback.', err);
+      if (heroCanvas) heroCanvas.style.display = 'none';
+      if (showcaseCanvas) showcaseCanvas.style.display = 'none';
+      initShowcaseDriver(null);
+    });
+} else {
+  initShowcaseDriver(null);
 }

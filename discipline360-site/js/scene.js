@@ -227,3 +227,248 @@ export function initHeroScene(canvas) {
     const tex = new THREE.CanvasTexture(c); tex.colorSpace = THREE.SRGBColorSpace; return tex;
   }
 }
+
+/* ============================================================
+   Discipline 360 — scroll-driven 3D phone showcase
+   An upright brand device that gently floats; its emissive screen
+   morphs (cross-fades) through each feature as the page scrolls.
+   Exposes setStep(i) so the scroll engine can drive it. Same
+   graceful-degradation contract as the hero scene.
+   ============================================================ */
+export function initShowcaseScene(canvas) {
+  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  let renderer;
+  try {
+    renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: 'high-performance' });
+  } catch (e) { canvas.style.display = 'none'; return { ok: false, setStep() {} }; }
+
+  const parent = canvas.parentElement;
+  const sizeOf = () => {
+    const r = parent.getBoundingClientRect();
+    return { w: Math.max(1, r.width), h: Math.max(1, r.height || window.innerHeight * 0.6) };
+  };
+  const isMobile = Math.min(window.innerWidth, window.innerHeight) < 720;
+  const DPR_CAP = isMobile ? 1.75 : 2;
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, DPR_CAP));
+  renderer.setClearColor(0x000000, 0);
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
+
+  const scene = new THREE.Scene();
+  let sz = sizeOf();
+  const camera = new THREE.PerspectiveCamera(32, sz.w / sz.h, 0.1, 100);
+  camera.position.set(0, 0, 11);
+  renderer.setSize(sz.w, sz.h, false);
+
+  scene.add(new THREE.AmbientLight(0xffffff, 0.72));
+  const key = new THREE.DirectionalLight(0xffe6d2, 1.7); key.position.set(3, 5, 6); scene.add(key);
+  const rim = new THREE.DirectionalLight(0xff6a3c, 1.1);  rim.position.set(-5, -2, 3); scene.add(rim);
+
+  // accent-tinted glow behind the device
+  const glow = new THREE.Sprite(new THREE.SpriteMaterial({ map: showGlow(), transparent: true, blending: THREE.AdditiveBlending, opacity: 0.85, depthWrite: false }));
+  glow.scale.set(11, 13, 1); glow.position.set(0, 0, -1.6); scene.add(glow);
+
+  const phone = new THREE.Group();
+  phone.rotation.set(0, -0.18, 0);
+  scene.add(phone);
+
+  const bodyGeo = new THREE.ExtrudeGeometry(showRounded(3.0, 6.1, 0.55), { depth: 0.4, bevelEnabled: true, bevelThickness: 0.12, bevelSize: 0.12, bevelSegments: 4, curveSegments: 22 });
+  bodyGeo.center();
+  phone.add(new THREE.Mesh(bodyGeo, new THREE.MeshStandardMaterial({ color: 0x161010, metalness: 0.86, roughness: 0.32 })));
+
+  // screen: one repaintable canvas texture, cross-faded between feature UIs
+  const SC = document.createElement('canvas'); SC.width = 540; SC.height = 1120; const sx = SC.getContext('2d');
+  const screenTex = new THREE.CanvasTexture(SC); screenTex.colorSpace = THREE.SRGBColorSpace;
+  screenTex.anisotropy = renderer.capabilities.getMaxAnisotropy();
+  const screen = new THREE.Mesh(showRoundedPlane(2.62, 5.66, 0.36),
+    new THREE.MeshStandardMaterial({ map: screenTex, emissive: 0xffffff, emissiveMap: screenTex, emissiveIntensity: 1.08, roughness: 0.22, metalness: 0.0 }));
+  screen.position.z = 0.32; phone.add(screen);
+
+  const ACCENTS = [ [0xE2,0x4B,0x4A], [0xFA,0xC7,0x75], [0x3B,0x82,0xF6], [0x1D,0x9E,0x75], [0x8B,0x5C,0xF6] ];
+  const painters = [paintAlarm, paintSteps, paintFocus, paintBlock, paintJournal];
+
+  let fromIdx = 0, toIdx = 0, mix = 1;              // cross-fade state
+  const glowCol = new THREE.Color().setRGB(ACCENTS[0][0]/255, ACCENTS[0][1]/255, ACCENTS[0][2]/255);
+  const glowTarget = glowCol.clone();
+  repaint();                                        // initial frame
+
+  function setStep(i) {
+    i = Math.max(0, Math.min(painters.length - 1, i | 0));
+    if (i === toIdx) return;
+    fromIdx = toIdx; toIdx = i; mix = 0;
+    const a = ACCENTS[i]; glowTarget.setRGB(a[0]/255, a[1]/255, a[2]/255);
+    if (prefersReduced) { mix = 1; repaint(); glowCol.copy(glowTarget); glow.material.color.copy(glowCol); }
+    if (!running) start();                          // ensure the fade renders even if paused
+  }
+
+  function repaint() {
+    sx.clearRect(0, 0, 540, 1120);
+    painters[fromIdx](sx, 1);
+    if (mix < 1) { sx.globalAlpha = mix; painters[toIdx](sx, mix); sx.globalAlpha = 1; }
+    screenTex.needsUpdate = true;
+  }
+
+  function resize() {
+    sz = sizeOf();
+    camera.aspect = sz.w / sz.h; camera.updateProjectionMatrix();
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, DPR_CAP));
+    renderer.setSize(sz.w, sz.h, false);
+  }
+  window.addEventListener('resize', resize, { passive: true });
+
+  const pointer = { x: 0, tx: 0 };
+  window.addEventListener('pointermove', (e) => { pointer.tx = (e.clientX / innerWidth - 0.5); }, { passive: true });
+
+  let raf = 0, visible = true, running = false;
+  const clock = new THREE.Clock();
+  function frame() {
+    const t = clock.getElapsedTime();
+    if (mix < 1) { mix = Math.min(1, mix + 0.045); repaint(); if (mix >= 1) fromIdx = toIdx; }
+    glowCol.lerp(glowTarget, 0.06); glow.material.color.copy(glowCol);
+    glow.material.opacity = 0.72 + Math.sin(t * 1.2) * 0.1;
+    pointer.x += (pointer.tx - pointer.x) * 0.05;
+    phone.rotation.y = -0.14 + Math.sin(t * 0.3) * 0.13 + pointer.x * 0.25;
+    phone.rotation.x = Math.sin(t * 0.42) * 0.045;
+    phone.position.y = Math.sin(t * 0.5) * 0.09;
+    renderer.render(scene, camera);
+    // idle without a transition: keep floating but we can ease off? keep rendering for smooth float
+    raf = requestAnimationFrame(frame);
+  }
+  function start() { if (!running && visible) { running = true; clock.start(); raf = requestAnimationFrame(frame); } }
+  function stop() { running = false; cancelAnimationFrame(raf); }
+
+  const io = new IntersectionObserver(([e]) => { visible = e.isIntersecting; if (visible && !prefersReduced) start(); else stop(); }, { threshold: 0.01 });
+  io.observe(canvas);
+  document.addEventListener('visibilitychange', () => { if (document.hidden) stop(); else if (visible && !prefersReduced) start(); });
+
+  if (prefersReduced) renderer.render(scene, camera); else start();
+  canvas.dataset.ready = '1'; window.__d360Showcase = 'ok';
+  return { ok: true, setStep };
+
+  // ---------------- screen painters (540 × 1120) ----------------
+  function frameBg(x, accent) {
+    x.fillStyle = '#120a09'; roundRect(x, 0, 0, 540, 1120, 46); x.fill();
+    const g = x.createLinearGradient(0, 0, 0, 520);
+    g.addColorStop(0, `rgba(${accent[0]},${accent[1]},${accent[2]},.34)`); g.addColorStop(1, 'rgba(18,10,9,0)');
+    x.fillStyle = g; roundRect(x, 0, 0, 540, 560, 46); x.fill();
+    // status bar
+    x.fillStyle = 'rgba(255,255,255,.55)'; x.font = '600 26px Inter, system-ui, sans-serif';
+    x.textAlign = 'left'; x.fillText('9:41', 40, 58);
+    x.textAlign = 'right'; x.fillText('100%', 500, 58);
+  }
+  function label(x, txt, col) { x.textAlign = 'center'; x.fillStyle = col; x.font = '700 27px "Space Grotesk", system-ui, sans-serif'; x.fillText(txt, 270, 150); }
+  function accentCss(a, alpha) { return `rgba(${a[0]},${a[1]},${a[2]},${alpha == null ? 1 : alpha})`; }
+
+  function paintAlarm(x) {
+    const a = ACCENTS[0]; frameBg(x, a);
+    label(x, 'MISSION TO DISMISS', accentCss([255,150,120]));
+    x.textAlign = 'center'; x.fillStyle = '#fff'; x.font = '700 150px "Space Grotesk", system-ui, sans-serif'; x.fillText('06:00', 270, 340);
+    // math mission card
+    x.fillStyle = 'rgba(255,255,255,.06)'; roundRect(x, 60, 430, 420, 300, 30); x.fill();
+    x.strokeStyle = accentCss(a, .5); x.lineWidth = 2; roundRect(x, 60, 430, 420, 300, 30); x.stroke();
+    x.fillStyle = 'rgba(255,255,255,.55)'; x.font = '600 24px Inter'; x.fillText('SOLVE TO STOP THE ALARM', 270, 490);
+    x.fillStyle = '#fff'; x.font = '700 92px "Space Grotesk"'; x.fillText('7 × 8 = ?', 270, 610);
+    x.fillStyle = accentCss(a); roundRect(x, 150, 650, 240, 60, 30); x.fill();
+    x.fillStyle = '#fff'; x.font = '700 34px "Space Grotesk"'; x.fillText('5   6', 220, 693);
+    // dismiss bar
+    x.fillStyle = accentCss(a); roundRect(x, 60, 800, 420, 92, 46); x.fill();
+    x.fillStyle = '#fff'; x.font = '700 34px "Space Grotesk"'; x.fillText('Slide to prove you’re up', 270, 858);
+    tabbar(x, a, 0);
+  }
+  function paintSteps(x) {
+    const a = ACCENTS[1]; frameBg(x, a);
+    label(x, 'DAILY WALK', accentCss([255,220,150]));
+    // ring
+    const cx = 270, cy = 400, R = 150;
+    x.lineWidth = 34; x.lineCap = 'round';
+    x.strokeStyle = 'rgba(255,255,255,.08)'; x.beginPath(); x.arc(cx, cy, R, 0, Math.PI * 2); x.stroke();
+    x.strokeStyle = accentCss(a); x.beginPath(); x.arc(cx, cy, R, -Math.PI/2, -Math.PI/2 + Math.PI*2*0.82); x.stroke();
+    x.textAlign = 'center'; x.fillStyle = '#fff'; x.font = '700 88px "Space Grotesk"'; x.fillText('8,240', cx, cy + 8);
+    x.fillStyle = 'rgba(255,255,255,.55)'; x.font = '600 26px Inter'; x.fillText('/ 8,000 steps', cx, cy + 56);
+    metricRow(x, ['324 kcal', '6.1 km', 'Power Pace'], a, 640);
+    x.fillStyle = accentCss(a, .16); roundRect(x, 60, 748, 420, 74, 20); x.fill();
+    x.fillStyle = accentCss([255,220,150]); x.font = '700 30px "Space Grotesk"'; x.fillText('🎯 Goal smashed · +50 coins', 270, 794);
+    tabbar(x, a, 1);
+  }
+  function paintFocus(x) {
+    const a = ACCENTS[2]; frameBg(x, a);
+    label(x, 'DEEP FOCUS', accentCss([150,190,255]));
+    // breathing ring
+    const cx = 270, cy = 400, R = 155;
+    x.lineWidth = 12; x.strokeStyle = accentCss(a, .35); x.beginPath(); x.arc(cx, cy, R, 0, Math.PI*2); x.stroke();
+    x.lineWidth = 30; x.lineCap = 'round'; x.strokeStyle = accentCss(a); x.beginPath(); x.arc(cx, cy, R, -Math.PI/2, -Math.PI/2 + Math.PI*2*0.62); x.stroke();
+    x.textAlign = 'center'; x.fillStyle = '#fff'; x.font = '700 120px "Space Grotesk"'; x.fillText('25:00', cx, cy + 22);
+    x.fillStyle = 'rgba(255,255,255,.55)'; x.font = '600 26px Inter'; x.fillText('Ship the landing page', cx, 640);
+    x.fillStyle = accentCss(a, .16); roundRect(x, 60, 690, 420, 130, 24); x.fill();
+    x.fillStyle = accentCss([150,190,255]); x.font = '700 27px "Space Grotesk"'; x.fillText('SURRENDER LOCKED', 270, 742);
+    x.fillStyle = 'rgba(255,255,255,.6)'; x.font = '500 23px Inter'; x.fillText('Retype the title to quit early', 270, 782);
+    tabbar(x, a, 1);
+  }
+  function paintBlock(x) {
+    const a = ACCENTS[3]; frameBg(x, a);
+    label(x, 'LIMIT REACHED', accentCss([120,230,180]));
+    // shield
+    x.save(); x.translate(270, 380); x.fillStyle = accentCss(a);
+    x.beginPath(); x.moveTo(0,-130); x.lineTo(115,-80); x.lineTo(115,20); x.quadraticCurveTo(115,120,0,165); x.quadraticCurveTo(-115,120,-115,20); x.lineTo(-115,-80); x.closePath(); x.fill();
+    x.strokeStyle = '#fff'; x.lineWidth = 14; x.lineCap='round'; x.lineJoin='round'; x.beginPath(); x.moveTo(-46,4); x.lineTo(-10,44); x.lineTo(56,-40); x.stroke(); x.restore();
+    x.textAlign = 'center'; x.fillStyle = '#fff'; x.font = '700 46px "Space Grotesk"'; x.fillText('Instagram blocked', 270, 640);
+    x.fillStyle = 'rgba(255,255,255,.55)'; x.font = '500 25px Inter'; x.fillText('Daily limit: 30 min · used 30 min', 270, 686);
+    x.fillStyle = accentCss(a, .16); roundRect(x, 60, 730, 420, 92, 24); x.fill();
+    x.fillStyle = accentCss([120,230,180]); x.font = '700 30px "Space Grotesk"'; x.fillText('🔒 Locked · no bypass', 270, 786);
+    tabbar(x, a, 3);
+  }
+  function paintJournal(x) {
+    const a = ACCENTS[4]; frameBg(x, a);
+    label(x, 'TODAY’S ENTRY', accentCss([190,160,255]));
+    x.textAlign = 'center'; x.font = '40px "Space Grotesk"'; x.fillText('🔥', 270, 250);
+    x.fillStyle = 'rgba(255,255,255,.5)'; x.font = '600 24px Inter'; x.fillText('Mood · On Fire', 270, 300);
+    // handwriting lines
+    x.textAlign = 'left'; x.fillStyle = 'rgba(255,255,255,.9)'; x.font = 'italic 34px Georgia, serif';
+    const lines = ['I almost skipped the walk today.', 'I didn’t. Beat the loser self again.', 'Small win. Stack another tomorrow.'];
+    lines.forEach((l, i) => x.fillText(l, 70, 400 + i * 62));
+    for (let i = 0; i < 4; i++) { x.strokeStyle = 'rgba(255,255,255,.08)'; x.lineWidth = 2; x.beginPath(); x.moveTo(70, 420 + i*62); x.lineTo(470, 420 + i*62); x.stroke(); }
+    x.fillStyle = accentCss(a, .16); roundRect(x, 60, 700, 420, 120, 24); x.fill();
+    x.textAlign = 'center'; x.fillStyle = accentCss([190,160,255]); x.font = '700 27px "Space Grotesk"'; x.fillText('20 FONTS · 10 LIVE BACKGROUNDS', 270, 748);
+    x.fillStyle = 'rgba(255,255,255,.6)'; x.font = '500 23px Inter'; x.fillText('🎙️ Or record a voice note', 270, 788);
+    tabbar(x, a, 2);
+  }
+  function metricRow(x, items, a, y) {
+    const w = 133, gap = 10, total = items.length * w + (items.length - 1) * gap, x0 = 270 - total / 2;
+    items.forEach((it, i) => {
+      const bx = x0 + i * (w + gap);
+      x.fillStyle = 'rgba(255,255,255,.05)'; roundRect(x, bx, y, w, 84, 18); x.fill();
+      x.textAlign = 'center'; x.fillStyle = '#fff'; x.font = '700 26px "Space Grotesk"'; x.fillText(it, bx + w/2, y + 52);
+    });
+  }
+  function tabbar(x, a, active) {
+    x.fillStyle = 'rgba(255,255,255,.04)'; roundRect(x, 30, 1010, 480, 82, 30); x.fill();
+    const icons = ['⏰','⚡','📓','🛡️','👤'];
+    icons.forEach((ic, i) => {
+      const cx = 90 + i * 90;
+      if (i === active) { x.fillStyle = accentCss(a, .9); roundRect(x, cx - 34, 1024, 68, 54, 18); x.fill(); }
+      x.textAlign = 'center'; x.font = '30px system-ui'; x.globalAlpha = i === active ? 1 : 0.6; x.fillText(ic, cx, 1062); x.globalAlpha = 1;
+    });
+  }
+  function roundRect(x, X, Y, w, h, r) { x.beginPath(); x.moveTo(X+r,Y); x.arcTo(X+w,Y,X+w,Y+h,r); x.arcTo(X+w,Y+h,X,Y+h,r); x.arcTo(X,Y+h,X,Y,r); x.arcTo(X,Y,X+w,Y,r); x.closePath(); }
+
+  // ---------------- three helpers ----------------
+  function showRounded(w, h, r) {
+    const s = new THREE.Shape(); const x = -w/2, y = -h/2;
+    s.moveTo(x+r, y); s.lineTo(x+w-r, y); s.quadraticCurveTo(x+w, y, x+w, y+r);
+    s.lineTo(x+w, y+h-r); s.quadraticCurveTo(x+w, y+h, x+w-r, y+h);
+    s.lineTo(x+r, y+h); s.quadraticCurveTo(x, y+h, x, y+h-r);
+    s.lineTo(x, y+r); s.quadraticCurveTo(x, y, x+r, y); return s;
+  }
+  function showRoundedPlane(w, h, r) {
+    const g = new THREE.ShapeGeometry(showRounded(w, h, r), 20);
+    g.computeBoundingBox(); const bb = g.boundingBox, uv = [], arr = g.attributes.position.array;
+    for (let i = 0; i < arr.length; i += 3) uv.push((arr[i]-bb.min.x)/(bb.max.x-bb.min.x), (arr[i+1]-bb.min.y)/(bb.max.y-bb.min.y));
+    g.setAttribute('uv', new THREE.Float32BufferAttribute(uv, 2)); return g;
+  }
+  function showGlow() {
+    const c = document.createElement('canvas'); c.width = c.height = 128; const x = c.getContext('2d');
+    const g = x.createRadialGradient(64, 64, 0, 64, 64, 64); g.addColorStop(0, 'rgba(255,255,255,1)'); g.addColorStop(.3, 'rgba(255,255,255,.7)'); g.addColorStop(1, 'rgba(255,255,255,0)');
+    x.fillStyle = g; x.beginPath(); x.arc(64, 64, 64, 0, Math.PI*2); x.fill();
+    const tex = new THREE.CanvasTexture(c); tex.colorSpace = THREE.SRGBColorSpace; return tex;
+  }
+}
