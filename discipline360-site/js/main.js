@@ -122,16 +122,37 @@ window.addEventListener('resize', requestTick, { passive: true });
 if (prefersReduced || window.innerWidth <= 960) pinSteps.forEach((s) => s.classList.add('is-active'));
 onScroll();
 
-/* ---- 3D scroll-phone showcase: activate the step nearest viewport centre ---- */
-function initShowcaseDriver(showcase) {
+/* ---- Scroll-phone showcase: activate the step nearest viewport centre and
+   swap the device's animated app screen to match ---- */
+function initShowcaseDriver() {
   const steps = [...document.querySelectorAll('#showcaseSteps .scase')];
   if (!steps.length) return;
+  const screens = [...document.querySelectorAll('.dev .appscr')];
+  const dev = document.getElementById('dev');
+  const setScreen = (idx) => {
+    screens.forEach((s) => s.classList.toggle('is-active', Number(s.dataset.step) === idx));
+    if (dev) dev.dataset.active = String(idx);
+  };
+
+  // On phones the device sits at the top and auto-plays through every screen,
+  // so all the animated app UIs are visible without a scroll-linked sticky.
+  const isMobile = window.matchMedia('(max-width: 960px)').matches;
+  if (isMobile) {
+    steps.forEach((s) => s.classList.add('is-active'));
+    setScreen(0);
+    if (!prefersReduced && screens.length > 1) {
+      let i = 0;
+      setInterval(() => { i = (i + 1) % screens.length; setScreen(i); }, 2800);
+    }
+    return;
+  }
+
   let current = -1;
   const setActive = (idx) => {
     if (idx === current) return;
     current = idx;
     steps.forEach((s, i) => s.classList.toggle('is-active', i === idx));
-    if (showcase && showcase.setStep) showcase.setStep(idx);
+    setScreen(idx);
   };
   setActive(0);
   const pick = () => {
@@ -150,34 +171,16 @@ function initShowcaseDriver(showcase) {
   pick();
 }
 
-/* WebGL scenes (dynamic import so a scene failure never breaks the page) */
+/* Showcase runs on pure CSS/DOM — always available, every device */
+initShowcaseDriver();
+
+/* WebGL hero (dynamic import so a scene failure never breaks the page) */
 const heroCanvas = document.getElementById('heroCanvas');
-const showcaseCanvas = document.getElementById('showcaseCanvas');
-if (heroCanvas || showcaseCanvas) {
-  import('./scene.js?v=r2')
-    .then((m) => {
-      if (heroCanvas) {
-        try { m.initHeroScene(heroCanvas); }
-        catch (err) { console.warn('[Discipline360] Hero WebGL unavailable.', err); heroCanvas.style.display = 'none'; }
-      }
-      if (showcaseCanvas) {
-        try {
-          const showcase = m.initShowcaseScene(showcaseCanvas);
-          if (!showcase || showcase.ok === false) showcaseCanvas.style.display = 'none';
-          initShowcaseDriver(showcase);
-        } catch (err) {
-          console.warn('[Discipline360] Showcase WebGL unavailable.', err);
-          showcaseCanvas.style.display = 'none';
-          initShowcaseDriver(null);
-        }
-      }
-    })
+if (heroCanvas) {
+  import('./scene.js?v=r3')
+    .then((m) => m.initHeroScene(heroCanvas))
     .catch((err) => {
-      console.warn('[Discipline360] WebGL scenes unavailable, using gradient fallback.', err);
-      if (heroCanvas) heroCanvas.style.display = 'none';
-      if (showcaseCanvas) showcaseCanvas.style.display = 'none';
-      initShowcaseDriver(null);
+      console.warn('[Discipline360] Hero WebGL unavailable, using gradient fallback.', err);
+      heroCanvas.style.display = 'none';
     });
-} else {
-  initShowcaseDriver(null);
 }

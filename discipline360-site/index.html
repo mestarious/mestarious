@@ -24,7 +24,7 @@
 
   <link rel="preload" href="assets/fonts/space-grotesk-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="preload" href="assets/fonts/inter-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin />
-  <link rel="stylesheet" href="css/styles.css?v=r2" />
+  <link rel="stylesheet" href="css/styles.css?v=r3" />
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -163,8 +163,67 @@
       </div>
       <div class="showcase__stage">
         <div class="showcase__phone">
-          <canvas id="showcaseCanvas" aria-hidden="true"></canvas>
-          <div class="showcase__fallback" aria-hidden="true"></div>
+          <div class="dev" id="dev" data-active="0" aria-hidden="true">
+            <span class="dev__notch"></span>
+            <div class="dev__screen">
+
+              <!-- 0 · Alarm -->
+              <div class="appscr appscr--alarm is-active" data-step="0">
+                <div class="appscr__bar"><span>9:41</span><span>100%</span></div>
+                <span class="appscr__tag" style="--c:#E24B4A">Mission to dismiss</span>
+                <div class="alarm__ring"></div>
+                <div class="alarm__clock">06:00</div>
+                <div class="alarm__mission">
+                  <p>Solve to stop the alarm</p>
+                  <div class="alarm__q">7 × 8 = <b>?</b></div>
+                  <div class="alarm__opts"><span>52</span><span class="on">56</span><span>63</span></div>
+                </div>
+                <div class="alarm__slide"><span>Slide to prove you’re up ›</span></div>
+              </div>
+
+              <!-- 1 · Steps -->
+              <div class="appscr appscr--steps" data-step="1">
+                <div class="appscr__bar"><span>9:41</span><span>100%</span></div>
+                <span class="appscr__tag" style="--c:#FAC775">Daily walk</span>
+                <div class="ring"><svg viewBox="0 0 120 120"><circle class="ring__bg" cx="60" cy="60" r="52"/><circle class="ring__fg" cx="60" cy="60" r="52"/></svg><div class="ring__mid"><b>8,240</b><small>/ 8,000</small></div></div>
+                <div class="chips"><span>324 kcal</span><span>6.1 km</span><span>Power Pace</span></div>
+                <div class="goalpill">🎯 Goal smashed · +50 coins</div>
+              </div>
+
+              <!-- 2 · Focus -->
+              <div class="appscr appscr--focus" data-step="2">
+                <div class="appscr__bar"><span>9:41</span><span>100%</span></div>
+                <span class="appscr__tag" style="--c:#3B82F6">Deep focus</span>
+                <div class="breathe"><span class="breathe__core">25:00</span></div>
+                <p class="focus__task">Ship the landing page</p>
+                <div class="focus__lock">🔒 Surrender locked — retype the title to quit</div>
+              </div>
+
+              <!-- 3 · Blocker -->
+              <div class="appscr appscr--block" data-step="3">
+                <div class="appscr__bar"><span>9:41</span><span>100%</span></div>
+                <span class="appscr__tag" style="--c:#1D9E75">Limit reached</span>
+                <div class="shield"><svg viewBox="0 0 120 130"><path d="M60 6 115 32 115 70 Q115 108 60 126 Q5 108 5 70 L5 32 Z"/></svg><span class="shield__tick">✓</span></div>
+                <p class="block__app">Instagram blocked</p>
+                <p class="block__sub">Daily limit 30 min · used 30 min</p>
+                <div class="block__lock">🔒 Locked · no bypass</div>
+              </div>
+
+              <!-- 4 · Journal (animated cozy background) -->
+              <div class="appscr appscr--journal" data-step="4">
+                <div class="jbg"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+                <div class="appscr__bar"><span>9:41</span><span>100%</span></div>
+                <span class="appscr__tag" style="--c:#8B5CF6">Tonight’s entry · On Fire 🔥</span>
+                <div class="jrnl">
+                  <p class="jrnl__l1">I almost skipped the walk today.</p>
+                  <p class="jrnl__l2">I didn’t. Beat the loser self again.</p>
+                  <p class="jrnl__l3">Small win. Stack another tomorrow.<span class="caret"></span></p>
+                </div>
+                <div class="jrnl__foot"><span>20 fonts · 10 live backgrounds</span><span>🎙️ voice note</span></div>
+              </div>
+
+            </div>
+          </div>
         </div>
         <ol class="showcase__steps" id="showcaseSteps">
           <li class="scase" data-step="0" style="--c:#E24B4A">
@@ -373,6 +432,6 @@
     </div>
   </footer>
 
-  <script type="module" src="js/main.js?v=r2"></script>
+  <script type="module" src="js/main.js?v=r3"></script>
 </body>
 </html>
