@@ -102,7 +102,10 @@ a { color:inherit; }
 .hero__orb { position:absolute; border-radius:50%; z-index:-2; filter:blur(30px); pointer-events:none; will-change:transform; }
 .hero__orb--1 { width:320px; height:320px; top:12%; left:-60px; background:radial-gradient(circle,rgba(255,158,0,.4),transparent 70%); }
 .hero__orb--2 { width:260px; height:260px; bottom:14%; right:-40px; background:radial-gradient(circle,rgba(226,75,74,.45),transparent 70%); }
-.hero__vignette { position:absolute; inset:0; z-index:-1; pointer-events:none; background:radial-gradient(110% 80% at 50% 0%,transparent 40%,rgba(18,5,4,.5) 100%),linear-gradient(to bottom,transparent 52%,var(--ink-2) 98%); }
+.hero__vignette { position:absolute; inset:0; z-index:-1; pointer-events:none; background:
+  linear-gradient(102deg, rgba(9,3,2,.9) 0%, rgba(9,3,2,.62) 34%, rgba(9,3,2,.12) 60%, transparent 76%),
+  radial-gradient(110% 80% at 50% 0%,transparent 40%,rgba(18,5,4,.5) 100%),
+  linear-gradient(to bottom,transparent 48%,var(--ink-2) 99%); }
 /* cinematic letterbox / scope framing on the hero */
 .hero::after { content:""; position:absolute; inset:0; z-index:2; pointer-events:none;
   box-shadow:inset 0 46px 50px -28px rgba(0,0,0,.75), inset 0 -90px 90px -30px rgba(0,0,0,.9), inset 0 0 180px 40px rgba(0,0,0,.55); }
@@ -112,9 +115,10 @@ a { color:inherit; }
 .hero__eyebrow { display:inline-flex; align-items:center; gap:8px; font-family:"Space Grotesk",sans-serif; font-weight:600; font-size:.82rem; letter-spacing:.12em; text-transform:uppercase; color:#ffd9b0; background:rgba(255,158,0,.1); border:1px solid rgba(255,158,0,.28); padding:7px 14px; border-radius:999px; margin:0 0 22px; }
 .spark { filter:drop-shadow(0 0 6px rgba(255,158,0,.8)); }
 .hero__title { font-family:"Space Grotesk",sans-serif; font-weight:700; font-size:clamp(2.8rem,8vw,6rem); line-height:.98; letter-spacing:-.03em; margin:0 0 20px; text-shadow:0 10px 50px rgba(0,0,0,.5); }
-.hero__sub { font-size:clamp(1.05rem,2vw,1.35rem); color:#f4d3c9; max-width:46ch; margin:0 0 32px; }
+.hero__sub { font-size:clamp(1.05rem,2vw,1.35rem); color:#ffe9e1; max-width:46ch; margin:0 0 32px; text-shadow:0 2px 20px rgba(0,0,0,.65); }
+.hero__sub b { color:#fff; }
 .hero__cta { display:flex; flex-wrap:wrap; gap:14px; align-items:center; }
-.hero__meta { margin-top:22px; font-size:.9rem; color:var(--muted-2); letter-spacing:.02em; }
+.hero__meta { margin-top:22px; font-size:.9rem; color:#e6c8bc; letter-spacing:.02em; text-shadow:0 1px 10px rgba(0,0,0,.6); }
 .hero__scroll { position:absolute; left:50%; bottom:26px; transform:translateX(-50%); width:26px; height:42px; border:2px solid rgba(255,215,190,.5); border-radius:14px; display:grid; justify-items:center; z-index:2; }
 .hero__scroll span { width:4px; height:8px; margin-top:7px; background:#ffd7be; border-radius:3px; animation:scroll 1.6s var(--ease) infinite; }
 @keyframes scroll { 0%{opacity:0;transform:translateY(-4px);} 40%{opacity:1;} 80%,100%{opacity:0;transform:translateY(12px);} }
@@ -422,6 +426,12 @@ a { color:inherit; }
   .win__cards,.score__grid,.trust__grid { grid-template-columns:1fr 1fr; }
   .hero { padding-top:104px; }
   .hero__cta .btn { flex:1 1 auto; justify-content:center; }
+  /* keep the hero copy readable over the 3D phone on phones */
+  .hero__canvas { opacity:.5; }
+  .hero__vignette { background:
+    linear-gradient(180deg, rgba(9,3,2,.66) 0%, rgba(9,3,2,.4) 30%, rgba(9,3,2,.9) 100%),
+    radial-gradient(130% 60% at 72% 16%, rgba(9,3,2,.55), transparent 72%); }
+  .hero__sub { color:#fff2ee; }
 }
 
 /* Reduced motion */
