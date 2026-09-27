@@ -177,7 +177,7 @@ initShowcaseDriver();
 /* WebGL hero (dynamic import so a scene failure never breaks the page) */
 const heroCanvas = document.getElementById('heroCanvas');
 if (heroCanvas) {
-  import('./scene.js?v=r6')
+  import('./scene.js?v=r7')
     .then((m) => m.initHeroScene(heroCanvas))
     .catch((err) => {
       console.warn('[Discipline360] Hero WebGL unavailable, using gradient fallback.', err);
